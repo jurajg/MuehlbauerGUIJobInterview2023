@@ -1,0 +1,51 @@
+﻿using CSVStorage;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TaskModel
+{
+    class Person : ICSVRow
+    {
+        readonly string[] ColumnNames = { "Id", "Name", "Birthday", "email"};
+
+        public const int ColumnCount = 4;
+
+        long Id;
+        string Name;
+        DateTime BirthDay;
+        string Email;
+
+        ICSVRow ICSVRow.Create(string[] columns)
+        {
+            if (columns.Length != ColumnCount)
+            {
+                throw new ArgumentException($"Person constructor got wrong count of columns {columns.Length} instead of {ColumnCount}");
+            }
+
+            Person p = new();
+            p.Id = long.Parse(columns[0]);
+            p.Name = columns[1];
+            p.BirthDay= DateUtil.StringToLocalDate(columns[2]);
+            p.Email = columns[3];
+            return p;
+        }
+
+        string[] ICSVRow.GetCols()
+        {
+            string[] cols = new string[ColumnCount];
+            cols[0] = Id.ToString();
+            cols[1] = Name;
+            cols[2] = DateUtil.DateToString(BirthDay);
+            cols[3] = Name;
+            return cols;
+        }
+
+        string[] ICSVRow.GetColumnHeaders()
+        {
+            return ColumnNames;
+        }
+    }
+}

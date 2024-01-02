@@ -9,12 +9,12 @@ namespace TaskModel
         readonly string[] ColumnNames = { "Id", "Name", "Description", "StartDate", "DueDate", "ResponsiblePersonId", "Status" };
 
         public const int ColumnCount = 7;
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime DueDate { get; set; }
-        public int ResponsiblePersonId { get; set; }
+        public long ResponsiblePersonId { get; set; }
         public string Status { get; set; }
 
         ICSVRow ICSVRow.Create(string[] columns)
@@ -25,19 +25,19 @@ namespace TaskModel
             }
 
             Task t = new();
-            t.Id = int.Parse(columns[0]);
+            t.Id = long.Parse(columns[0]);
             t.Name = columns[1];
             t.Description = columns[2];
             t.StartDate = DateUtil.StringToLocalDate(columns[3]);
             t.DueDate = DateUtil.StringToLocalDate(columns[4]);
-            t.ResponsiblePersonId = int.Parse(columns[5]);
+            t.ResponsiblePersonId = long.Parse(columns[5]);
             t.Status = columns[6];
             return t;
         }
 
         string[] ICSVRow.GetCols()
         {
-            string[] cols = new string[7];
+            string[] cols = new string[ColumnCount];
             cols[0] = Id.ToString();
             cols[1] = Name;
             cols[2] = Description;
