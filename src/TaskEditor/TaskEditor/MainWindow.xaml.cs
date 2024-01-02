@@ -30,18 +30,18 @@ namespace TaskEditor
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine(DateTime.Now);
-
-            Debug.WriteLine(DateUtil.DateToString(DateTime.Now));
-            Debug.WriteLine(DateUtil.StringToLocalDate(DateUtil.DateToString(DateTime.Now)));
+            
 
             TaskModel.Task taskType = new();
-            List<ICSVRow> result = CSVStorage.CSVStorage.ReadCSV("", taskType);
+            List<ICSVRow> result = CSVStorage.CSVStorage.ReadCSV("D:\\test.csv", taskType);
             List<TaskModel.Task> tasks = new List<TaskModel.Task>( result.Cast<TaskModel.Task>() );
             foreach (TaskModel.Task t in tasks)
             {
                 Debug.WriteLine(t.StartDate.ToString());
             }
+
+            //CSVStorage.CSVStorage.WriteCSV("D:\\test.csv", result, taskType);
+
         }
     }
 }

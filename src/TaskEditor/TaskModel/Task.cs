@@ -6,6 +6,8 @@ namespace TaskModel
 {
     public class Task : ICSVRow
     {
+        readonly string[] ColumnNames = { "Id", "Name", "Description", "StartDate", "DueDate", "ResponsiblePersonId", "Status" };
+
         public const int ColumnCount = 7;
         public int Id { get; set; }
         public string Name { get; set; }
@@ -15,11 +17,11 @@ namespace TaskModel
         public int ResponsiblePersonId { get; set; }
         public string Status { get; set; }
 
-        ICSVRow ICSVRow.Create(List<string> columns)
+        ICSVRow ICSVRow.Create(string[] columns)
         {
-            if(columns.Count!= ColumnCount)
+            if(columns.Length != ColumnCount)
             {
-                throw new ArgumentException($"Task constructor got wrong count of columns {columns.Count} instead of {ColumnCount}");
+                throw new ArgumentException($"Task constructor got wrong count of columns {columns.Length} instead of {ColumnCount}");
             }
 
             Task t = new();
@@ -33,17 +35,22 @@ namespace TaskModel
             return t;
         }
 
-        List<string> ICSVRow.GetCols()
+        string[] ICSVRow.GetCols()
         {
-            List<string> cols = new();
-            cols.Add(Id.ToString());
-            cols.Add(Name);
-            cols.Add(Description);
-            cols.Add(DateUtil.DateToString(StartDate));
-            cols.Add(DateUtil.DateToString(DueDate));
-            cols.Add(ResponsiblePersonId.ToString());
-            cols.Add(Status);
+            string[] cols = new string[7];
+            cols[0] = Id.ToString();
+            cols[1] = Name;
+            cols[2] = Description;
+            cols[3] = DateUtil.DateToString(StartDate);
+            cols[4] = DateUtil.DateToString(DueDate);
+            cols[5] = ResponsiblePersonId.ToString();
+            cols[6] = Status;
             return cols;
+        }
+
+        string[] ICSVRow.GetColumnHeaders()
+        {
+            return ColumnNames;
         }
     }
 }
