@@ -1,8 +1,8 @@
-﻿using CSVStorage;
+﻿using CSVStorageLib;
 using System;
 using System.Collections.Generic;
 
-namespace TaskModel
+namespace TaskModelLib
 {
     public class Task : ICSVRow
     {
@@ -16,6 +16,11 @@ namespace TaskModel
         public DateTime DueDate { get; set; }
         public long ResponsiblePersonId { get; set; }
         public string Status { get; set; }
+
+        public Task()
+        {
+
+        }
 
         ICSVRow ICSVRow.Create(string[] columns)
         {

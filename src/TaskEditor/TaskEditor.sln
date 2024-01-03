@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.34301.259
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskEditor", "TaskEditor\TaskEditor.csproj", "{0FE98024-D3BA-4E33-A23D-90B2F2EF8712}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSVStorage", "CSVStorage\CSVStorage.csproj", "{E4739ADA-A281-4782-956F-998EC765E4D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSVStorageLib", "CSVStorage\CSVStorageLib.csproj", "{E4739ADA-A281-4782-956F-998EC765E4D9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskModel", "TaskModel\TaskModel.csproj", "{171AAAD3-D1C0-4477-B560-B9FFDE6D6AA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskModelLib", "TaskModel\TaskModelLib.csproj", "{171AAAD3-D1C0-4477-B560-B9FFDE6D6AA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskModelTests", "TaskModelTests\TaskModelTests.csproj", "{B967EACE-FDD1-4225-926F-10F83688552B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskModelLibTests", "TaskModelTests\TaskModelLibTests.csproj", "{B967EACE-FDD1-4225-926F-10F83688552B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

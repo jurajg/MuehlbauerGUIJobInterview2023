@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSVStorage
+namespace CSVStorageLib
 {
     public interface ICSVRow
     {
@@ -23,7 +23,6 @@ namespace CSVStorage
         public abstract string[] GetCols();
 
         public abstract string[] GetColumnHeaders();
-
-
     }
+
 }

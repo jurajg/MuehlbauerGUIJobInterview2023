@@ -13,8 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
-using TaskModel;
-using CSVStorage;
+using TaskModelLib;
+using CSVStorageLib;
 
 namespace TaskEditor
 {
@@ -30,17 +30,24 @@ namespace TaskEditor
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            
 
-            TaskModel.Task taskType = new();
-            List<ICSVRow> result = CSVStorage.CSVStorage.ReadCSV("D:\\test.csv", taskType);
-            List<TaskModel.Task> tasks = new List<TaskModel.Task>( result.Cast<TaskModel.Task>() );
-            foreach (TaskModel.Task t in tasks)
+
+
+            Debug.WriteLine(CSVStorage.GetStorageFolder());
+
+            TaskModelLib.Task taskType = new();
+            List<ICSVRow> result = CSVStorage.ReadCSV("D:\\test.csv", taskType);
+            List<TaskModelLib.Task> tasks = new( result.Cast<TaskModelLib.Task>() );
+            foreach (TaskModelLib.Task t in tasks)
             {
                 Debug.WriteLine(t.StartDate.ToString());
             }
 
-            //CSVStorage.CSVStorage.WriteCSV("D:\\test.csv", result, taskType);
+            //CSVStorage.WriteCSV("D:\\test.csv", result, taskType);
+
+            TaskModelLib.TaskModel model = new();
+            model.Load();
+
 
         }
     }

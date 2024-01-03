@@ -1,11 +1,11 @@
-﻿using CSVStorage;
+﻿using CSVStorageLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TaskModel
+namespace TaskModelLib
 {
     class Person : ICSVRow
     {
@@ -39,7 +39,7 @@ namespace TaskModel
             cols[0] = Id.ToString();
             cols[1] = Name;
             cols[2] = DateUtil.DateToString(BirthDay);
-            cols[3] = Name;
+            cols[3] = Email;
             return cols;
         }
 

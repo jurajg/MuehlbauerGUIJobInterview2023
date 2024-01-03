@@ -1,12 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TaskModel;
+using TaskModelLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TaskModel.Tests
+namespace TaskModelLib.Tests
 {
     [TestClass()]
     public class DateUtilTests
