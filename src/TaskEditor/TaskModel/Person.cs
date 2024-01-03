@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TaskModelLib
 {
-    class Person : ICSVRow
+    public class Person : ICSVRow
     {
         readonly string[] ColumnNames = { "Id", "Name", "Birthday", "email"};
 
@@ -17,6 +17,11 @@ namespace TaskModelLib
         public string Name { get; set; }
         public DateTime BirthDay { get; set; }
         public string Email { get; set; }
+
+        public Person()
+        {
+            BirthDay = DateTime.Now;
+        }
 
         ICSVRow ICSVRow.Create(string[] columns)
         {
@@ -28,7 +33,7 @@ namespace TaskModelLib
             Person p = new();
             p.Id = long.Parse(columns[0]);
             p.Name = columns[1];
-            p.BirthDay= DateUtil.StringToLocalDate(columns[2]);
+            p.BirthDay = DateUtil.StringToLocalDate(columns[2]);
             p.Email = columns[3];
             return p;
         }

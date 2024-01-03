@@ -8,7 +8,7 @@ using CSVStorageLib;
 
 namespace TaskModelLib
 {
-    class TaskTable : Table
+    public class TaskTable : Table
     {
         List<Task> data;
 
@@ -32,6 +32,7 @@ namespace TaskModelLib
 
         public override long CreateUniqueId()
         {
+            if (data.Count == 0) return 1;
             var maxId = data.Aggregate((agg, next) =>
                                        next.Id> agg.Id ? next : agg).Id;
             return maxId + 1;
@@ -60,7 +61,7 @@ namespace TaskModelLib
 
             List<ICSVRow> rows = new(data.Cast<ICSVRow>());
             TaskModelLib.Task taskType = new();
-            CSVStorage.WriteCSV(fPath, rows, (ICSVRow)taskType);
+            CSVStorage.WriteCSV(fPath, rows, taskType);
         }
     }
 }

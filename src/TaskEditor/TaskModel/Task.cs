@@ -19,7 +19,8 @@ namespace TaskModelLib
 
         public Task()
         {
-
+            StartDate = DateTime.Now;
+            DueDate = StartDate.AddDays(1);
         }
 
         ICSVRow ICSVRow.Create(string[] columns)

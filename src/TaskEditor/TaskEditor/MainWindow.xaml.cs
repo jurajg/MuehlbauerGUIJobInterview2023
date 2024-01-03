@@ -47,6 +47,11 @@ namespace TaskEditor
 
             TaskModelLib.TaskModel model = new();
             model.Load();
+            model.taskTable.CreateTask();
+            model.taskTable.CreateTask();
+            model.personTable.CreatePerson();
+            model.personTable.CreatePerson();
+            model.Save();
 
 
         }
