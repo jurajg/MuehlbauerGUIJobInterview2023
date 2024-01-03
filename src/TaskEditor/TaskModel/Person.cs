@@ -13,10 +13,10 @@ namespace TaskModelLib
 
         public const int ColumnCount = 4;
 
-        long Id;
-        string Name;
-        DateTime BirthDay;
-        string Email;
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public DateTime BirthDay { get; set; }
+        public string Email { get; set; }
 
         ICSVRow ICSVRow.Create(string[] columns)
         {

@@ -26,6 +26,7 @@ namespace TaskModelLib
         {
             Task task = new();
             task.Id = CreateUniqueId();
+            data.Add(task);
             return task;
         }
 
