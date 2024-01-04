@@ -33,39 +33,12 @@ namespace TaskEditor
             InitializeComponent();
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
-        {
-
-
-
-            Debug.WriteLine(CSVStorage.GetStorageFolder());
-
-            TaskModelLib.Task taskType = new();
-            List<ICSVRow> result = CSVStorage.ReadCSV("D:\\test.csv", taskType);
-            List<TaskModelLib.Task> tasks = new( result.Cast<TaskModelLib.Task>() );
-            foreach (TaskModelLib.Task t in tasks)
-            {
-                Debug.WriteLine(t.StartDate.ToString());
-            }
-
-            //CSVStorage.WriteCSV("D:\\test.csv", result, taskType);
-
-            TaskModelLib.TaskModel model = new();
-            model.Load();
-            model.taskTable.CreateTask();
-            model.taskTable.CreateTask();
-            model.personTable.CreatePerson();
-            model.personTable.CreatePerson();
-            model.Save();
-
-
-        }
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             taskModel = new();
             taskModel.Load();
             dataGridPersons.ItemsSource = taskModel.personTable.data;
+            dataGridTasks.ItemsSource = taskModel.taskTable.data;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

@@ -23,12 +23,45 @@
         <TabControl x:Name="tabControl">
             <TabItem Header="Tasks">
                 <Grid Background="#FFE5E5E5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="23*"/>
-                        <ColumnDefinition Width="374*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button Content="Button" HorizontalAlignment="Left" Margin="45,32,0,0" VerticalAlignment="Top" Click="button_Click" Grid.ColumnSpan="2"/>
-                </Grid>
+                    <DataGrid x:Name="dataGridTasks" AutoGenerateColumns="False" CanUserSortColumns="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" />
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                            <DataGridTextColumn Header="Description" Binding="{Binding Description}" />
+
+                            <DataGridTemplateColumn Header="StartDate" SortMemberPath="StartDate" CanUserSort="True">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <DatePicker SelectedDate="{Binding StartDate,
+                                                                       UpdateSourceTrigger=LostFocus}" BorderThickness="0" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate>
+                                        <DatePicker SelectedDate="{Binding StartDate, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>
+                            </DataGridTemplateColumn>
+
+                                <DataGridTemplateColumn Header="DueDate" SortMemberPath="DueDate" CanUserSort="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <DatePicker SelectedDate="{Binding DueDate,
+                                                                       UpdateSourceTrigger=LostFocus}" BorderThickness="0" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                    <DataGridTemplateColumn.CellEditingTemplate>
+                                        <DataTemplate>
+                                            <DatePicker SelectedDate="{Binding DueDate, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellEditingTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTextColumn Header="ResponsiblePerson" Binding="{Binding ResponsiblePersonId}" IsReadOnly="True" />
+                                <DataGridComboBoxColumn Header="Status"  SelectedItemBinding="{Binding Status}" ItemsSource="{Binding Source={StaticResource StatusEnum}}" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
             </TabItem>
             <TabItem Header="Persons">
                 <Grid Background="#FFE5E5E5">
@@ -51,8 +84,7 @@
                                 </DataGridTemplateColumn.CellEditingTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTextColumn Header="Email" Binding="{Binding Email}" />
-                            <!--DataGridComboBoxColumn Header="Order Status"  SelectedItemBinding="{Binding Status}" ItemsSource="{Binding Source={StaticResource StatusEnum}}" /-->
+                                <DataGridTextColumn Header="Email" Binding="{Binding Email}" />
                         </DataGrid.Columns>
                     </DataGrid>
                     

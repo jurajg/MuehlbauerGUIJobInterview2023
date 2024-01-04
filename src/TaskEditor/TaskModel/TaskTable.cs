@@ -10,7 +10,7 @@ namespace TaskModelLib
 {
     public class TaskTable : Table
     {
-        List<Task> data;
+        public List<Task> data;
 
         public TaskTable() : base("task")
         {
