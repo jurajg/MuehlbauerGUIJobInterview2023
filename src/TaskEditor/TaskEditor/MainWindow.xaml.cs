@@ -45,40 +45,5 @@ namespace TaskEditor
         {
             taskModel.Save();
         }
-
-        private void dataGridTasks_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
-        {
-            if (e.EditAction == DataGridEditAction.Cancel)
-            {
-                //e.Cancel = false;
-                return;
-            }
-
-            if (e.EditAction == DataGridEditAction.Commit)
-            {
-                DataGridRow dgr = e.Row;
-                Debug.WriteLine($"{e.Row.Item}");
-                if( ((TaskModelLib.Task)e.Row.Item).Id==0) {
-                    ((TaskModelLib.Task)e.Row.Item).Id = taskModel.taskTable.CreateUniqueId();
-                }
-            }
-        }
-
-        private void dataGridTasks_AddingNewItem(object sender, AddingNewItemEventArgs e)
-        {
-            /*Debug.WriteLine($"{e.NewItem}");
-            e.NewItem = taskModel.taskTable.CreateTask(); // TODO creates duplicate row
-            dataGridTasks.Items.Refresh();*/
-        }
-
-        private void dataGridTasks_PreparingCellForEdit(object sender, DataGridPreparingCellForEditEventArgs e)
-        {
-            Debug.WriteLine($"PreparingCellForEdit {e.Row.Item}");
-            if (((TaskModelLib.Task)e.Row.Item).Id == 0)
-            {
-                ((TaskModelLib.Task)e.Row.Item).Id = taskModel.taskTable.CreateUniqueId();
-                Debug.WriteLine($"PreparingCellForEdit {((TaskModelLib.Task)e.Row.Item).Id }");
-            }
-        }
     }
 }

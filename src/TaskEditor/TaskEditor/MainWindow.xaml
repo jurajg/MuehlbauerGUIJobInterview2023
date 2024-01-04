@@ -23,7 +23,7 @@
         <TabControl x:Name="tabControl">
             <TabItem Header="Tasks">
                 <Grid Background="#FFE5E5E5">
-                    <DataGrid x:Name="dataGridTasks" AutoGenerateColumns="False" CanUserSortColumns="True" AddingNewItem="dataGridTasks_AddingNewItem" PreparingCellForEdit="dataGridTasks_PreparingCellForEdit">
+                    <DataGrid x:Name="dataGridTasks" AutoGenerateColumns="False" CanUserSortColumns="True">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" />
                             <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
