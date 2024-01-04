@@ -18,11 +18,16 @@ using CSVStorageLib;
 
 namespace TaskEditor
 {
+    public enum TaskStatusEnum { todo, ongoing, done };
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        TaskModelLib.TaskModel taskModel;
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -54,6 +59,18 @@ namespace TaskEditor
             model.Save();
 
 
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            taskModel = new();
+            taskModel.Load();
+            dataGridPersons.ItemsSource = taskModel.personTable.data;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            taskModel.Save();
         }
     }
 }
