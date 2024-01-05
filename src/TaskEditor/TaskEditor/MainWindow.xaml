@@ -16,13 +16,34 @@
                 <x:Type Type="local:TaskStatusEnum"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
+
+        <local:BoolToGridRowHeightConverter x:Key="BoolToGridRowHeightConverter"/>
     </Window.Resources>
     <Window.Content>
 
         <Grid>
         <TabControl x:Name="tabControl">
             <TabItem Header="Tasks">
-                <Grid Background="#FFE5E5E5">
+                <Grid x:Name="taskGrid" Background="#FFE5E5E5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50" />
+                            <!--RowDefinition Height="{Binding IsHiddenRowAddTaskProperty, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToGridRowHeightConverter}}" /-->
+                            <RowDefinition Height="{Binding IsHiddenRowAddTaskProperty, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToGridRowHeightConverter}}" />
+                            <!--RowDefinition Height="{Binding RowHeightProperty, UpdateSourceTrigger=PropertyChanged}" /-->
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid Background="#FFE5E5E5" Grid.Row="0">
+                            <Button x:Name="buttonAddTask" Content="Add Task" HorizontalAlignment="Left" Margin="25,0,0,0" VerticalAlignment="Center" Height="30" Click="buttonAddTask_Click"/>
+                        </Grid>
+                        <Grid Background="#FFD0D0D0" Grid.Row="1">
+                            <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="60,51,0,0" VerticalAlignment="Top"/>
+
+                        </Grid>
+
+                        <Grid Background="#FFE5E5E5" Grid.Row="2">
                     <DataGrid x:Name="dataGridTasks" AutoGenerateColumns="False" CanUserSortColumns="True">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" />
@@ -62,15 +83,16 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
-            </TabItem>
+                    </Grid>
+                </TabItem>
             <TabItem Header="Persons">
-                <Grid Background="#FFE5E5E5">
-                    <DataGrid x:Name="dataGridPersons" AutoGenerateColumns="False" CanUserSortColumns="True">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" />
-                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                    <Grid Background="#FFE5E5E5">
+                        <DataGrid x:Name="dataGridPersons" AutoGenerateColumns="False" CanUserSortColumns="True" CanUserAddRows="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" />
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
 
-                            <DataGridTemplateColumn Header="Birthday" SortMemberPath="Birthday" CanUserSort="True">
+                                <DataGridTemplateColumn Header="Birthday" SortMemberPath="Birthday" CanUserSort="True">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <DatePicker SelectedDate="{Binding BirthDay,
@@ -78,20 +100,18 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                     <DataGridTemplateColumn.CellEditingTemplate>
-                                    <DataTemplate>
+                                        <DataTemplate>
                                             <DatePicker SelectedDate="{Binding BirthDay, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellEditingTemplate>
-                            </DataGridTemplateColumn>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellEditingTemplate>
+                                </DataGridTemplateColumn>
 
                                 <DataGridTextColumn Header="Email" Binding="{Binding Email}" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                    
+                            </DataGrid.Columns>
+                        </DataGrid>
 
-
-                </Grid>
-            </TabItem>
+                    </Grid>
+                </TabItem>
         </TabControl>
 
     </Grid>
