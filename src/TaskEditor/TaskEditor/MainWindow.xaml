@@ -105,15 +105,48 @@
                                     </DataGridTemplateColumn>
 
                                     <DataGridTextColumn Header="ResponsiblePerson" Binding="{Binding ResponsiblePersonId}" IsReadOnly="True" />
-                                    <DataGridComboBoxColumn Header="Status"  SelectedItemBinding="{Binding Status}" ItemsSource="{Binding Source={StaticResource StatusEnum}}" />
+
+                                    <DataGridTemplateColumn Header="ResponsiblePerson" SortMemberPath="ResponsiblePerson" CanUserSort="True">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Label Content="{Binding ResponsiblePerson}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                        <DataGridTemplateColumn.CellEditingTemplate>
+                                            <DataTemplate>
+                                                <ComboBox
+                            ItemsSource="{Binding ElementName=dataGridPersons, Mode=OneWay}"
+                            SelectedItem="{Binding ResponsiblePerson, NotifyOnSourceUpdated=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                    SelectedValue="{Binding ResponsiblePerson, NotifyOnSourceUpdated=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellEditingTemplate>
+                                    </DataGridTemplateColumn>
+
+
+
+                                    <DataGridTemplateColumn Header="Status" SortMemberPath="Status" CanUserSort="True">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Label Content="{Binding Status}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                        <DataGridTemplateColumn.CellEditingTemplate>
+                                            <DataTemplate>
+                                                <ComboBox
+                            ItemsSource="{Binding Source={StaticResource StatusEnum}, Mode=OneWay}"
+                            SelectedItem="{Binding Status, NotifyOnSourceUpdated=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                    SelectedValue="{Binding Status, NotifyOnSourceUpdated=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellEditingTemplate>
+                                    </DataGridTemplateColumn>
+                                    
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Grid>
                     </Grid>
                 </TabItem>
-                
-                
-                
                 
                 <TabItem Header="Persons">
                     <Grid x:Name="personGrid" Background="#FFE5E5E5">

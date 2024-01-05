@@ -14,6 +14,7 @@ namespace TaskModelLib
         public string Description { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime DueDate { get; set; }
+        public string ResponsiblePerson { get; set; }
         public long ResponsiblePersonId { get; set; }
         public string Status { get; set; }
 
