@@ -42,7 +42,26 @@ namespace TaskEditor
             set { SetValue(IsHiddenRowTasksTopPanelProperty, value); }
         }
 
+        DependencyProperty IsHiddenRowAddPersonProperty = DependencyProperty.Register("IsHiddenRowAddPersonProperty", typeof(bool), typeof(MainWindow));
+
+        public bool IsHiddenRowAddPerson
+        {
+            get { return (bool)GetValue(IsHiddenRowAddPersonProperty); }
+            set { SetValue(IsHiddenRowAddPersonProperty, value); }
+        }
+
+        DependencyProperty IsHiddenRowPersonsTopPanelProperty = DependencyProperty.Register("IsHiddenRowPersonsTopPanelProperty", typeof(bool), typeof(MainWindow));
+
+        public bool IsHiddenRowPersonsTopPanel
+        {
+            get { return (bool)GetValue(IsHiddenRowPersonsTopPanelProperty); }
+            set { SetValue(IsHiddenRowPersonsTopPanelProperty, value); }
+        }
+
         TaskModelLib.TaskModel taskModel;
+        TaskModelLib.Task addedTask;
+        TaskModelLib.Person addedPerson;
+
 
         public MainWindow()
         {
@@ -56,8 +75,11 @@ namespace TaskEditor
             dataGridPersons.ItemsSource = taskModel.personTable.data;
             dataGridTasks.ItemsSource = taskModel.taskTable.data;
             taskGrid.DataContext = this;
+            personGrid.DataContext = this;
             IsHiddenRowTasksTopPanel = false;
             IsHiddenRowAddTask = true;
+            IsHiddenRowPersonsTopPanel = false;
+            IsHiddenRowAddPerson = true;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -67,7 +89,7 @@ namespace TaskEditor
 
         private void buttonAddTask_Click(object sender, RoutedEventArgs e)
         {
-            taskModel.taskTable.CreateTask();
+            addedTask = taskModel.taskTable.CreateTask();
             dataGridTasks.Items.Refresh();
 
             IsHiddenRowTasksTopPanel = true;
@@ -85,6 +107,30 @@ namespace TaskEditor
             IsHiddenRowTasksTopPanel = false;
             IsHiddenRowAddTask = true;
         }
+
+        private void buttonAddPerson_Click(object sender, RoutedEventArgs e)
+        {
+            addedPerson = taskModel.personTable.CreatePerson();
+            dataGridPersons.Items.Refresh();
+
+            textPersonName.Text = addedPerson.Name;
+            datePickerPersonBirthDay.DisplayDate = addedPerson.BirthDay;
+            textPersonEmail.Text = addedPerson.Email;
+
+            IsHiddenRowPersonsTopPanel = true;
+            IsHiddenRowAddPerson = false;
+        }
+
+        private void buttonAddPersonApply_Click(object sender, RoutedEventArgs e)
+        {
+            addedPerson.Name = textPersonName.Text;
+            addedPerson.BirthDay = datePickerPersonBirthDay.DisplayDate;
+            addedPerson.Email = textPersonEmail.Text;
+            dataGridPersons.Items.Refresh();
+
+            IsHiddenRowPersonsTopPanel = false;
+            IsHiddenRowAddPerson = true;
+        }
     }
 
     // source: https://stackoverflow.com/questions/2502178/hide-grid-row-in-wpf
@@ -93,8 +139,6 @@ namespace TaskEditor
     {
         object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Debug.WriteLine("ASDASDSADS");
-            //return new GridLength(1, GridUnitType.Star); // new GridLength(0);
             return ((bool)value == true) ? new GridLength(0) : new GridLength(1, GridUnitType.Auto);
         }
 
