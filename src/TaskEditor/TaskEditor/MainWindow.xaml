@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TaskEditor"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded" Closing="Window_Closing">
+        Title="MainWindow" Height="721" Width="800" Loaded="Window_Loaded" Closing="Window_Closing">
 
 
     <Window.Resources>
@@ -17,75 +17,101 @@
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
 
-        <local:BoolToGridRowHeightConverter x:Key="BoolToGridRowHeightConverter"/>
+        <local:BoolToGridRowHeightAutoSizeConverter x:Key="BoolToGridRowHeightAutoSizeConverter"/>
     </Window.Resources>
     <Window.Content>
 
         <Grid>
-        <TabControl x:Name="tabControl">
-            <TabItem Header="Tasks">
-                <Grid x:Name="taskGrid" Background="#FFE5E5E5">
+            <TabControl x:Name="tabControl">
+                <TabItem Header="Tasks">
+                    <Grid x:Name="taskGrid" Background="#FFE5E5E5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="50" />
-                            <!--RowDefinition Height="{Binding IsHiddenRowAddTaskProperty, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToGridRowHeightConverter}}" /-->
-                            <RowDefinition Height="{Binding IsHiddenRowAddTaskProperty, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToGridRowHeightConverter}}" />
-                            <!--RowDefinition Height="{Binding RowHeightProperty, UpdateSourceTrigger=PropertyChanged}" /-->
+                            <RowDefinition Height="{Binding IsHiddenRowTasksTopPanelProperty, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToGridRowHeightAutoSizeConverter}}" />
+                            <RowDefinition Height="{Binding IsHiddenRowAddTaskProperty, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToGridRowHeightAutoSizeConverter}}" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid Background="#FFE5E5E5" Grid.Row="0">
                             <Button x:Name="buttonAddTask" Content="Add Task" HorizontalAlignment="Left" Margin="25,0,0,0" VerticalAlignment="Center" Height="30" Click="buttonAddTask_Click"/>
                         </Grid>
                         <Grid Background="#FFD0D0D0" Grid.Row="1">
-                            <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="60,51,0,0" VerticalAlignment="Top"/>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
+
+                            <Label   Grid.Row="0" Grid.Column="0" x:Name="labelTaskName" Content="Name" HorizontalAlignment="Right" Margin="10,5,0,5" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" x:Name="textTaskName"  HorizontalAlignment="Left" Margin="10,5,0,5" Text="Task Name" TextWrapping="Wrap" VerticalAlignment="Center" Width="500"/>
+
+                            <Label   Grid.Row="1" Grid.Column="0"  x:Name="labelTaskDescription" Content="Description" HorizontalAlignment="Right" Margin="10,5,0,5" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="1" Grid.Column="1"  x:Name="textTaskDescription"  HorizontalAlignment="Left" Margin="10,5,0,5" Text="Task Description" TextWrapping="Wrap" AcceptsReturn="True" VerticalAlignment="Center" Width="500"/>
+
+                            <Label      Grid.Row="2" Grid.Column="0" x:Name="labelTaskStartDate" Content="Start Date" HorizontalAlignment="Right" Margin="10,5,0,5" VerticalAlignment="Center"/>
+                            <DatePicker Grid.Row="2" Grid.Column="1" x:Name="datePickerStartDate" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                            
+                            <Label      Grid.Row="3" Grid.Column="0" x:Name="labelTaskDueDate" Content="Due Date" HorizontalAlignment="Right" Margin="10,5,0,5" VerticalAlignment="Center"/>
+                            <DatePicker Grid.Row="3" Grid.Column="1" x:Name="datePickerDueDate" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center"/>
+
+                            <Label      Grid.Row="4" Grid.Column="0" x:Name="labelResponsiblePerson" Content="Responsible Person" HorizontalAlignment="Right" Margin="10,5,0,5" VerticalAlignment="Center"/>
+                          
+                            <Button Grid.Row="5" Grid.Column="0" x:Name="buttonAddTaskApply" Content="Add Task" HorizontalAlignment="Center" Margin="0,10,0,10" VerticalAlignment="Top" Click="buttonAddTaskApply_Click"/>
+                            <Button Grid.Row="5" Grid.Column="1" x:Name="buttonCancelAddTask" Content="Cancel" HorizontalAlignment="Left" Margin="50,10,0,10" VerticalAlignment="Top" Click="buttonCancelAddTask_Click"/>
 
                         </Grid>
 
                         <Grid Background="#FFE5E5E5" Grid.Row="2">
-                    <DataGrid x:Name="dataGridTasks" AutoGenerateColumns="False" CanUserSortColumns="True">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" />
-                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-                            <DataGridTextColumn Header="Description" Binding="{Binding Description}" />
+                            <DataGrid x:Name="dataGridTasks" AutoGenerateColumns="False" CanUserSortColumns="True">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" />
+                                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                                    <DataGridTextColumn Header="Description" Binding="{Binding Description}" />
 
-                            <DataGridTemplateColumn Header="StartDate" SortMemberPath="StartDate" CanUserSort="True">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <DatePicker SelectedDate="{Binding StartDate,
+                                    <DataGridTemplateColumn Header="StartDate" SortMemberPath="StartDate" CanUserSort="True">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding StartDate,
                                                                        UpdateSourceTrigger=LostFocus}" BorderThickness="0" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                                <DataGridTemplateColumn.CellEditingTemplate>
-                                    <DataTemplate>
-                                        <DatePicker SelectedDate="{Binding StartDate, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellEditingTemplate>
-                            </DataGridTemplateColumn>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                        <DataGridTemplateColumn.CellEditingTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding StartDate, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellEditingTemplate>
+                                    </DataGridTemplateColumn>
 
-                                <DataGridTemplateColumn Header="DueDate" SortMemberPath="DueDate" CanUserSort="True">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <DatePicker SelectedDate="{Binding DueDate,
+                                    <DataGridTemplateColumn Header="DueDate" SortMemberPath="DueDate" CanUserSort="True">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding DueDate,
                                                                        UpdateSourceTrigger=LostFocus}" BorderThickness="0" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                    <DataGridTemplateColumn.CellEditingTemplate>
-                                        <DataTemplate>
-                                            <DatePicker SelectedDate="{Binding DueDate, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellEditingTemplate>
-                                </DataGridTemplateColumn>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                        <DataGridTemplateColumn.CellEditingTemplate>
+                                            <DataTemplate>
+                                                <DatePicker SelectedDate="{Binding DueDate, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellEditingTemplate>
+                                    </DataGridTemplateColumn>
 
-                                <DataGridTextColumn Header="ResponsiblePerson" Binding="{Binding ResponsiblePersonId}" IsReadOnly="True" />
-                                <DataGridComboBoxColumn Header="Status"  SelectedItemBinding="{Binding Status}" ItemsSource="{Binding Source={StaticResource StatusEnum}}" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </Grid>
+                                    <DataGridTextColumn Header="ResponsiblePerson" Binding="{Binding ResponsiblePersonId}" IsReadOnly="True" />
+                                    <DataGridComboBoxColumn Header="Status"  SelectedItemBinding="{Binding Status}" ItemsSource="{Binding Source={StaticResource StatusEnum}}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
                     </Grid>
                 </TabItem>
-            <TabItem Header="Persons">
+                <TabItem Header="Persons">
                     <Grid Background="#FFE5E5E5">
                         <DataGrid x:Name="dataGridPersons" AutoGenerateColumns="False" CanUserSortColumns="True" CanUserAddRows="False">
                             <DataGrid.Columns>
@@ -112,8 +138,8 @@
 
                     </Grid>
                 </TabItem>
-        </TabControl>
+            </TabControl>
 
-    </Grid>
+        </Grid>
     </Window.Content>
 </Window>

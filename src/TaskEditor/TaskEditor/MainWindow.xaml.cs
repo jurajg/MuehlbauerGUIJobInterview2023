@@ -33,33 +33,17 @@ namespace TaskEditor
             get { return (bool)GetValue(IsHiddenRowAddTaskProperty); }
             set { SetValue(IsHiddenRowAddTaskProperty, value); }
         }
+        
+        DependencyProperty IsHiddenRowTasksTopPanelProperty = DependencyProperty.Register("IsHiddenRowTasksTopPanelProperty", typeof(bool), typeof(MainWindow));
 
-        DependencyProperty RowHeightProperty = DependencyProperty.Register("RowHeightProperty", typeof(GridLength), typeof(MainWindow),
-            new FrameworkPropertyMetadata
-            {
-                BindsTwoWayByDefault = true,
-            });
-        public GridLength RowHeight
+        public bool IsHiddenRowTasksTopPanel
         {
-            get { return new GridLength(10); Debug.WriteLine("ASDDDASDAD"); }
-            set { SetValue(RowHeightProperty, value); }
+            get { return (bool)GetValue(IsHiddenRowTasksTopPanelProperty); }
+            set { SetValue(IsHiddenRowTasksTopPanelProperty, value); }
         }
-
 
         TaskModelLib.TaskModel taskModel;
-        /*
-        bool _IsHiddenRowAddTask = false;
-        public bool IsHiddenRowAddTask {
-            get
-            {
-                return _IsHiddenRowAddTask;
-            }
-            set
-            {
-                _IsHiddenRowAddTask = value;
-            }
-        }
-        */
+
         public MainWindow()
         {
             InitializeComponent();
@@ -72,6 +56,8 @@ namespace TaskEditor
             dataGridPersons.ItemsSource = taskModel.personTable.data;
             dataGridTasks.ItemsSource = taskModel.taskTable.data;
             taskGrid.DataContext = this;
+            IsHiddenRowTasksTopPanel = false;
+            IsHiddenRowAddTask = true;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -84,23 +70,32 @@ namespace TaskEditor
             taskModel.taskTable.CreateTask();
             dataGridTasks.Items.Refresh();
 
-            IsHiddenRowAddTask = !IsHiddenRowAddTask;
-            RowHeight = new GridLength(20);
+            IsHiddenRowTasksTopPanel = true;
+            IsHiddenRowAddTask = false;
         }
 
-        
+        private void buttonAddTaskApply_Click(object sender, RoutedEventArgs e)
+        {
+            IsHiddenRowTasksTopPanel = false;
+            IsHiddenRowAddTask = true;
+        }
 
+        private void buttonCancelAddTask_Click(object sender, RoutedEventArgs e)
+        {
+            IsHiddenRowTasksTopPanel = false;
+            IsHiddenRowAddTask = true;
+        }
     }
 
     // source: https://stackoverflow.com/questions/2502178/hide-grid-row-in-wpf
     [ValueConversion(typeof(bool), typeof(GridLength))]
-    public class BoolToGridRowHeightConverter : IValueConverter
+    public class BoolToGridRowHeightAutoSizeConverter : IValueConverter
     {
         object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             Debug.WriteLine("ASDASDSADS");
             //return new GridLength(1, GridUnitType.Star); // new GridLength(0);
-            return ((bool)value == true) ? new GridLength(1, GridUnitType.Auto) : new GridLength(0);
+            return ((bool)value == true) ? new GridLength(0) : new GridLength(1, GridUnitType.Auto);
         }
 
         object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
