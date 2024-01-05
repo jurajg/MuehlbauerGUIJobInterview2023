@@ -131,6 +131,15 @@ namespace TaskEditor
             IsHiddenRowPersonsTopPanel = false;
             IsHiddenRowAddPerson = true;
         }
+
+        private void buttonCancelAddPerson_Click(object sender, RoutedEventArgs e)
+        {
+            taskModel.personTable.DeletePersonById(addedPerson.Id);
+            dataGridPersons.Items.Refresh();
+
+            IsHiddenRowPersonsTopPanel = false;
+            IsHiddenRowAddPerson = true;
+        }
     }
 
     // source: https://stackoverflow.com/questions/2502178/hide-grid-row-in-wpf

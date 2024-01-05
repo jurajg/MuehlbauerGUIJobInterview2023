@@ -38,6 +38,11 @@ namespace TaskModelLib
             return maxId + 1;
         }
 
+        public void DeletePersonById(long id)
+        {
+            data.RemoveAll(item => item.Id == id);
+        }
+
         public override void Load()
         {
             string fPath = CSVStorage.GetTableFPath(TableName);
