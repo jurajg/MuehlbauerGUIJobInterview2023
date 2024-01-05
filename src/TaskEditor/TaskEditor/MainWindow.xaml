@@ -70,7 +70,7 @@
                         </Grid>
 
                         <Grid Background="#FFE5E5E5" Grid.Row="2">
-                            <DataGrid x:Name="dataGridTasks" AutoGenerateColumns="False" CanUserSortColumns="True">
+                            <DataGrid x:Name="dataGridTasks" AutoGenerateColumns="False" CanUserSortColumns="True" CanUserAddRows="False">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" />
                                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" />

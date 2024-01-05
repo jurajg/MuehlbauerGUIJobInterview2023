@@ -92,18 +92,35 @@ namespace TaskEditor
             addedTask = taskModel.taskTable.CreateTask();
             dataGridTasks.Items.Refresh();
 
+            textTaskName.Text = addedTask.Name;
+            textTaskDescription.Text = addedTask.Description;
+            datePickerStartDate.DisplayDate = addedTask.StartDate;
+            datePickerDueDate.DisplayDate = addedTask.DueDate;
+            // TODO: combobox responsible person
+
             IsHiddenRowTasksTopPanel = true;
             IsHiddenRowAddTask = false;
         }
 
         private void buttonAddTaskApply_Click(object sender, RoutedEventArgs e)
         {
+            addedTask.Name = textTaskName.Text;
+            addedTask.Description = textTaskDescription.Text;
+            addedTask.StartDate = datePickerStartDate.DisplayDate;
+            addedTask.DueDate = datePickerDueDate.DisplayDate;
+            // TODO: combobox responsible person
+
+            dataGridTasks.Items.Refresh();
+
             IsHiddenRowTasksTopPanel = false;
             IsHiddenRowAddTask = true;
         }
 
         private void buttonCancelAddTask_Click(object sender, RoutedEventArgs e)
         {
+            taskModel.taskTable.DeleteTaskById(addedTask.Id);
+            dataGridTasks.Items.Refresh();
+
             IsHiddenRowTasksTopPanel = false;
             IsHiddenRowAddTask = true;
         }
@@ -126,6 +143,7 @@ namespace TaskEditor
             addedPerson.Name = textPersonName.Text;
             addedPerson.BirthDay = datePickerPersonBirthDay.DisplayDate;
             addedPerson.Email = textPersonEmail.Text;
+
             dataGridPersons.Items.Refresh();
 
             IsHiddenRowPersonsTopPanel = false;
