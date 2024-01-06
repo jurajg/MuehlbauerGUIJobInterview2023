@@ -38,6 +38,11 @@ namespace TaskModelLib
             return maxId + 1;
         }
 
+        public void DeleteTask(TaskModelLib.Task task)
+        {
+            data.Remove(task);
+        }
+
         public void DeleteTaskById(long id)
         {
             data.RemoveAll(item => item.Id == id);

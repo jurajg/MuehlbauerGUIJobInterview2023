@@ -5,6 +5,7 @@
         xmlns:core="clr-namespace:System;assembly=mscorlib"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TaskEditor"
+        xmlns:taskModelLib="clr-namespace:TaskModelLib;assembly=TaskModelLib"
         mc:Ignorable="d"
         Title="MainWindow" Height="721" Width="800" Loaded="Window_Loaded" Closing="Window_Closing">
 
@@ -16,8 +17,6 @@
                 <x:Type Type="local:TaskStatusEnum"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
-
-        <local:BoolToGridRowHeightAutoSizeConverter x:Key="BoolToGridRowHeightAutoSizeConverter"/>
     </Window.Resources>
     <Window.Content>
 
@@ -29,12 +28,12 @@
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="{Binding IsHiddenRowTasksTopPanelProperty, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToGridRowHeightAutoSizeConverter}}" />
-                            <RowDefinition Height="{Binding IsHiddenRowAddTaskProperty, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToGridRowHeightAutoSizeConverter}}" />
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid Background="#FFE5E5E5" Grid.Row="0">
-                            <Button x:Name="buttonAddTask" Content="Add Task" HorizontalAlignment="Left" Margin="25,0,0,0" VerticalAlignment="Center" Height="30" Click="buttonAddTask_Click"/>
+                            <Button x:Name="buttonAddTask" Content="Add Task" HorizontalAlignment="Left" Margin="25,0,0,0" VerticalAlignment="Center" Padding="5,5,5,5" Click="buttonAddTask_Click"/>
                         </Grid>
                         <Grid Background="#FFD0D0D0" Grid.Row="1">
                             <Grid.ColumnDefinitions>
@@ -63,14 +62,13 @@
                             <DatePicker Grid.Row="3" Grid.Column="1" x:Name="datePickerDueDate" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center"/>
 
                             <Label      Grid.Row="4" Grid.Column="0" x:Name="labelResponsiblePerson" Content="Responsible Person" HorizontalAlignment="Right" Margin="10,5,0,5" VerticalAlignment="Center"/>
-                          
-                            <Button Grid.Row="5" Grid.Column="0" x:Name="buttonAddTaskApply" Content="Add Task" HorizontalAlignment="Center" Margin="0,10,0,10" VerticalAlignment="Top" Click="buttonAddTaskApply_Click"/>
-                            <Button Grid.Row="5" Grid.Column="1" x:Name="buttonCancelAddTask" Content="Cancel" HorizontalAlignment="Left" Margin="50,10,0,10" VerticalAlignment="Top" Click="buttonCancelAddTask_Click"/>
+                            <ComboBox   Grid.Row="4" Grid.Column="1" x:Name="cbResponsiblePerson" HorizontalAlignment="Left" Margin="10,5,0,5" VerticalAlignment="Center" Width="300"/>
 
+                            <Button Grid.Row="5" Grid.Column="0" x:Name="buttonTaskApply" Content="Apply" HorizontalAlignment="Center" Margin="0,10,0,10" Padding="5,5,5,5" VerticalAlignment="Top" Click="buttonApplyTask_Click"/>
                         </Grid>
 
                         <Grid Background="#FFE5E5E5" Grid.Row="2">
-                            <DataGrid x:Name="dataGridTasks" AutoGenerateColumns="False" CanUserSortColumns="True" CanUserAddRows="False">
+                            <DataGrid x:Name="dataGridTasks" AutoGenerateColumns="False" CanUserSortColumns="True" CanUserAddRows="False" SelectionChanged="dataGridTasks_SelectionChanged">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" />
                                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
@@ -141,7 +139,15 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellEditingTemplate>
                                     </DataGridTemplateColumn>
-                                    
+
+                                    <DataGridTemplateColumn>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Click="buttonDeleteTask_Click">x</Button>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Grid>
@@ -154,12 +160,12 @@
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="{Binding IsHiddenRowPersonsTopPanelProperty, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToGridRowHeightAutoSizeConverter}}" />
-                            <RowDefinition Height="{Binding IsHiddenRowAddPersonProperty, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToGridRowHeightAutoSizeConverter}}" />
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid Background="#FFE5E5E5" Grid.Row="0">
-                            <Button x:Name="buttonAddPerson" Content="Add Person" HorizontalAlignment="Left" Margin="25,0,0,0" VerticalAlignment="Center" Height="30" Click="buttonAddPerson_Click"/>
+                            <Button x:Name="buttonPersonAdd" Content="Add Person" HorizontalAlignment="Left" Margin="25,5,0,5" VerticalAlignment="Center" Padding="5,5,5,5" Click="buttonPersonAdd_Click"/>
                         </Grid>
                         <Grid Background="#FFD0D0D0" Grid.Row="1">
                             <Grid.ColumnDefinitions>
@@ -182,13 +188,13 @@
                             <Label      Grid.Row="2" Grid.Column="0" x:Name="labelPersonEmail" Content="Email Address" HorizontalAlignment="Right" Margin="10,5,0,5" VerticalAlignment="Center"/>
                             <TextBox    Grid.Row="2" Grid.Column="1" x:Name="textPersonEmail"  HorizontalAlignment="Left" Margin="10,5,0,5" Text="johndoe@example.com" TextWrapping="Wrap" VerticalAlignment="Center" Width="500"/>
 
-                            <Button Grid.Row="5" Grid.Column="0" x:Name="buttonAddPersonApply" Content="Apply" HorizontalAlignment="Center" Margin="0,10,0,10" VerticalAlignment="Top" Click="buttonAddPersonApply_Click"/>
-                            <Button Grid.Row="5" Grid.Column="1" x:Name="buttonCancelAddPerson" Content="Cancel" HorizontalAlignment="Left" Margin="50,10,0,10" VerticalAlignment="Top" Click="buttonCancelAddPerson_Click"/>
+                            <Button Grid.Row="5" Grid.Column="0" x:Name="buttonPersonDelete" Content="Apply" HorizontalAlignment="Center" Margin="0,10,0,10" Padding="5,5,5,5" VerticalAlignment="Top" Click="buttonPersonApply_Click"/>
+                            <Button Grid.Row="5" Grid.Column="1" x:Name="buttonDeletePerson" Content="Delete" HorizontalAlignment="Left" Margin="10,10,0,10" Padding="5,5,5,5" VerticalAlignment="Top" Click="buttonPersonDelete_Click"/>
                         </Grid>
 
                         <Grid Background="#FFE5E5E5" Grid.Row="2">
                             <Grid Background="#FFE5E5E5">
-                        <DataGrid x:Name="dataGridPersons" AutoGenerateColumns="False" CanUserSortColumns="True" CanUserAddRows="False">
+                        <DataGrid x:Name="dataGridPersons" AutoGenerateColumns="False" CanUserSortColumns="True" CanUserAddRows="False" SelectionChanged="dataGridPersons_SelectionChanged">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" />
                                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
@@ -208,6 +214,14 @@
                                 </DataGridTemplateColumn>
 
                                 <DataGridTextColumn Header="Email" Binding="{Binding Email}" />
+
+                                <DataGridTemplateColumn>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                                    <Button Click="buttonPersonGridDelete_Click">x</Button>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                             </Grid>

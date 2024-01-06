@@ -26,41 +26,9 @@ namespace TaskEditor
     /// </summary>
     public partial class MainWindow : Window
     {
-        DependencyProperty IsHiddenRowAddTaskProperty = DependencyProperty.Register("IsHiddenRowAddTaskProperty", typeof(bool),typeof(MainWindow));
-
-        public bool IsHiddenRowAddTask
-        {
-            get { return (bool)GetValue(IsHiddenRowAddTaskProperty); }
-            set { SetValue(IsHiddenRowAddTaskProperty, value); }
-        }
-        
-        DependencyProperty IsHiddenRowTasksTopPanelProperty = DependencyProperty.Register("IsHiddenRowTasksTopPanelProperty", typeof(bool), typeof(MainWindow));
-
-        public bool IsHiddenRowTasksTopPanel
-        {
-            get { return (bool)GetValue(IsHiddenRowTasksTopPanelProperty); }
-            set { SetValue(IsHiddenRowTasksTopPanelProperty, value); }
-        }
-
-        DependencyProperty IsHiddenRowAddPersonProperty = DependencyProperty.Register("IsHiddenRowAddPersonProperty", typeof(bool), typeof(MainWindow));
-
-        public bool IsHiddenRowAddPerson
-        {
-            get { return (bool)GetValue(IsHiddenRowAddPersonProperty); }
-            set { SetValue(IsHiddenRowAddPersonProperty, value); }
-        }
-
-        DependencyProperty IsHiddenRowPersonsTopPanelProperty = DependencyProperty.Register("IsHiddenRowPersonsTopPanelProperty", typeof(bool), typeof(MainWindow));
-
-        public bool IsHiddenRowPersonsTopPanel
-        {
-            get { return (bool)GetValue(IsHiddenRowPersonsTopPanelProperty); }
-            set { SetValue(IsHiddenRowPersonsTopPanelProperty, value); }
-        }
-
-        TaskModelLib.TaskModel taskModel;
-        TaskModelLib.Task addedTask;
-        TaskModelLib.Person addedPerson;
+        public TaskModelLib.TaskModel taskModel;
+        private TaskModelLib.Task addedTask;
+        private TaskModelLib.Person selectedPerson;
 
 
         public MainWindow()
@@ -76,10 +44,6 @@ namespace TaskEditor
             dataGridTasks.ItemsSource = taskModel.taskTable.data;
             taskGrid.DataContext = this;
             personGrid.DataContext = this;
-            IsHiddenRowTasksTopPanel = false;
-            IsHiddenRowAddTask = true;
-            IsHiddenRowPersonsTopPanel = false;
-            IsHiddenRowAddPerson = true;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -97,81 +61,151 @@ namespace TaskEditor
             datePickerStartDate.DisplayDate = addedTask.StartDate;
             datePickerDueDate.DisplayDate = addedTask.DueDate;
             // TODO: combobox responsible person
-
-            IsHiddenRowTasksTopPanel = true;
-            IsHiddenRowAddTask = false;
         }
 
-        private void buttonAddTaskApply_Click(object sender, RoutedEventArgs e)
+        private void buttonApplyTask_Click(object sender, RoutedEventArgs e)
         {
-            addedTask.Name = textTaskName.Text;
-            addedTask.Description = textTaskDescription.Text;
-            addedTask.StartDate = datePickerStartDate.DisplayDate;
-            addedTask.DueDate = datePickerDueDate.DisplayDate;
+            TaskModelLib.Task t = (TaskModelLib.Task)dataGridTasks.SelectedValue;
+            if (t == null) return;
+
+            Debug.WriteLine(dataGridTasks.SelectedValue);
+
+            t.Name = textTaskName.Text;
+            t.Description = textTaskDescription.Text;
+            t.StartDate = datePickerStartDate.DisplayDate;
+            t.DueDate = datePickerDueDate.DisplayDate;
             // TODO: combobox responsible person
 
             dataGridTasks.Items.Refresh();
-
-            IsHiddenRowTasksTopPanel = false;
-            IsHiddenRowAddTask = true;
         }
+
+        private void buttonDeleteTask_Click(object sender, RoutedEventArgs e)
+        {
+            TaskModelLib.Task task = null;
+            for (var vis = sender as Visual; vis != null; vis = VisualTreeHelper.GetParent(vis) as Visual)
+            {
+                if (vis is DataGridRow)
+                {
+                    var row = (DataGridRow)vis;
+                    task = (TaskModelLib.Task)row.Item;
+                    break;
+                }
+            }
+            if (task == null) return;
+            
+            MessageBoxResult mbResult = MessageBox.Show($"Are you sure to delete task named '{task.Name}'?", "Deleting Task", MessageBoxButton.YesNo);
+            if (mbResult == MessageBoxResult.Yes)
+            {
+                taskModel.taskTable.DeleteTask(task);
+                dataGridTasks.ItemsSource = null;
+                dataGridTasks.ItemsSource = taskModel.taskTable.data;
+            }
+        }
+
 
         private void buttonCancelAddTask_Click(object sender, RoutedEventArgs e)
         {
             taskModel.taskTable.DeleteTaskById(addedTask.Id);
             dataGridTasks.Items.Refresh();
-
-            IsHiddenRowTasksTopPanel = false;
-            IsHiddenRowAddTask = true;
         }
 
-        private void buttonAddPerson_Click(object sender, RoutedEventArgs e)
+        private void SelectPerson(Person person)
         {
-            addedPerson = taskModel.personTable.CreatePerson();
+            selectedPerson = person;
+            if (person == null)
+            {
+                textPersonName.Text = "";
+                datePickerPersonBirthDay.DisplayDate = DateTime.Now;
+                textPersonEmail.Text = "";
+
+                textPersonName.IsEnabled = false;
+                datePickerPersonBirthDay.IsEnabled = false;
+                textPersonEmail.IsEnabled = false;
+                return;
+                
+            }
+            textPersonName.Text = person.Name;
+            datePickerPersonBirthDay.SelectedDate = person.BirthDay;
+            textPersonEmail.Text = person.Email;
+
+            textPersonName.IsEnabled = true;
+            datePickerPersonBirthDay.IsEnabled = true;
+            textPersonEmail.IsEnabled = true;
+        }
+
+        private void buttonPersonAdd_Click(object sender, RoutedEventArgs e)
+        {
+            Person person = taskModel.personTable.CreatePerson();
             dataGridPersons.Items.Refresh();
-
-            textPersonName.Text = addedPerson.Name;
-            datePickerPersonBirthDay.DisplayDate = addedPerson.BirthDay;
-            textPersonEmail.Text = addedPerson.Email;
-
-            IsHiddenRowPersonsTopPanel = true;
-            IsHiddenRowAddPerson = false;
+            SelectPerson(person);
+            dataGridPersons.SelectedItem = person;
         }
 
-        private void buttonAddPersonApply_Click(object sender, RoutedEventArgs e)
+        private void buttonPersonApply_Click(object sender, RoutedEventArgs e)
         {
-            addedPerson.Name = textPersonName.Text;
-            addedPerson.BirthDay = datePickerPersonBirthDay.DisplayDate;
-            addedPerson.Email = textPersonEmail.Text;
+            //Person p = (TaskModelLib.Person)dataGridPersons.SelectedValue;
+            Person p = selectedPerson;
+            if (p == null) return;
+
+            p.Name = textPersonName.Text;
+            p.BirthDay = datePickerPersonBirthDay.SelectedDate ?? DateTime.Now;
+            p.Email = textPersonEmail.Text;
 
             dataGridPersons.Items.Refresh();
-
-            IsHiddenRowPersonsTopPanel = false;
-            IsHiddenRowAddPerson = true;
         }
 
-        private void buttonCancelAddPerson_Click(object sender, RoutedEventArgs e)
+        private void buttonPersonDelete_Click(object sender, RoutedEventArgs e)
         {
-            taskModel.personTable.DeletePersonById(addedPerson.Id);
-            dataGridPersons.Items.Refresh();
-
-            IsHiddenRowPersonsTopPanel = false;
-            IsHiddenRowAddPerson = true;
-        }
-    }
-
-    // source: https://stackoverflow.com/questions/2502178/hide-grid-row-in-wpf
-    [ValueConversion(typeof(bool), typeof(GridLength))]
-    public class BoolToGridRowHeightAutoSizeConverter : IValueConverter
-    {
-        object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return ((bool)value == true) ? new GridLength(0) : new GridLength(1, GridUnitType.Auto);
+            DeletePerson(selectedPerson);
+            SelectPerson(null);
         }
 
-        object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            private void buttonPersonGridDelete_Click(object sender, RoutedEventArgs e)
         {
-            return null;
+            Person person = null;
+            for (var vis = sender as Visual; vis != null; vis = VisualTreeHelper.GetParent(vis) as Visual)
+            {
+                if (vis is DataGridRow)
+                {
+                    var row = (DataGridRow)vis;
+                    person = (Person)row.Item;
+                    break;
+                }
+            }
+
+            DeletePerson(person);
+            SelectPerson(null);
+        }
+
+        private void DeletePerson(Person person)
+        {
+            if (person == null) return;
+            MessageBoxResult mbResult = MessageBox.Show($"Are you sure to delete person named '{person.Name}'?", "Deleting Person", MessageBoxButton.YesNo);
+            if (mbResult == MessageBoxResult.Yes)
+            {
+                taskModel.personTable.DeletePerson(person);
+                dataGridPersons.ItemsSource = null;
+                dataGridPersons.ItemsSource = taskModel.personTable.data;
+            }
+        }
+
+        private void buttonDeletePerson_Click(object sender, RoutedEventArgs e)
+        {
+            DeletePerson(selectedPerson);
+        }
+
+        private void dataGridTasks_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DataGrid dg = sender as DataGrid;
+            Debug.WriteLine($"tasks selection changed {dg.SelectedValue}");
+            //
+        }
+
+        private void dataGridPersons_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DataGrid dg = sender as DataGrid;
+            selectedPerson = (Person)dg.SelectedItem;
+            SelectPerson(selectedPerson);
         }
     }
 }

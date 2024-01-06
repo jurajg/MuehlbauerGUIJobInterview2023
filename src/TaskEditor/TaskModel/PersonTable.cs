@@ -42,6 +42,15 @@ namespace TaskModelLib
         {
             data.RemoveAll(item => item.Id == id);
         }
+        public void DeletePerson(Person person)
+        {
+            data.Remove(person);
+        }
+
+        public List<string> GetNames()
+        {
+            return data.Select(item => item.Name).ToList();
+        }
 
         public override void Load()
         {
