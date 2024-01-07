@@ -59,14 +59,14 @@ namespace TaskEditor
         private void buttonTaskAdd_Click(object sender, RoutedEventArgs e)
         {
             selectedTask = taskModel.taskTable.CreateTask();
-            dataGridTasks.Items.Refresh();
+            CollectionViewSource.GetDefaultView(dataGridTasks.ItemsSource).Refresh();
 
             SelectTask(selectedTask);
         }
 
         private void buttonTaskApply_Click(object sender, RoutedEventArgs e)
         {
-            TaskModelLib.Task t = (TaskModelLib.Task)dataGridTasks.SelectedValue;
+            TaskModelLib.Task t = selectedTask;
             if (t == null) return;
                         
             t.Name = textTaskName.Text;
@@ -105,10 +105,8 @@ namespace TaskEditor
 
                 cbTaskResponsiblePerson.SelectedItem = task.ResponsiblePersonId.ToString();
 
-                TaskStatusEnum val = Enum.TryParse<TaskStatusEnum>(task.Status, true, out val) ? val : TaskStatusEnum.todo;
-                cbTaskStatus.SelectedItem = val;
-                //cbTaskStatus.SelectedValue = task.Status;
-                //cbTaskStatus.
+                TaskStatusEnum eStatus = Enum.TryParse<TaskStatusEnum>(task.Status, true, out eStatus) ? eStatus : TaskStatusEnum.todo;
+                cbTaskStatus.SelectedItem = eStatus;
 
                 textTaskName.IsEnabled = true;
                 textTaskDescription.IsEnabled = true;
@@ -183,9 +181,11 @@ namespace TaskEditor
         private void buttonPersonAdd_Click(object sender, RoutedEventArgs e)
         {
             Person person = taskModel.personTable.CreatePerson();
-            dataGridPersons.Items.Refresh();
+            CollectionViewSource.GetDefaultView(dataGridPersons.ItemsSource).Refresh();
+            //dataGridPersons.Items.Refresh();
             SelectPerson(person);
             dataGridPersons.SelectedItem = person;
+            
         }
 
         private void buttonPersonApply_Click(object sender, RoutedEventArgs e)
