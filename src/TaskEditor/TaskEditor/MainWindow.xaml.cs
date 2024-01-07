@@ -27,7 +27,7 @@ namespace TaskEditor
     public partial class MainWindow : Window
     {
         public TaskModelLib.TaskModel taskModel;
-        private TaskModelLib.Task addedTask;
+        private TaskModelLib.Task selectedTask;
         private TaskModelLib.Person selectedPerson;
 
 
@@ -40,6 +40,11 @@ namespace TaskEditor
         {
             taskModel = new();
             taskModel.Load();
+            selectedTask = null;
+            selectedPerson = null;
+            SelectPerson(null);
+            SelectTask(null);
+
             dataGridPersons.ItemsSource = taskModel.personTable.data;
             dataGridTasks.ItemsSource = taskModel.taskTable.data;
             taskGrid.DataContext = this;
@@ -51,35 +56,89 @@ namespace TaskEditor
             taskModel.Save();
         }
 
-        private void buttonAddTask_Click(object sender, RoutedEventArgs e)
+        private void buttonTaskAdd_Click(object sender, RoutedEventArgs e)
         {
-            addedTask = taskModel.taskTable.CreateTask();
+            selectedTask = taskModel.taskTable.CreateTask();
             dataGridTasks.Items.Refresh();
 
-            textTaskName.Text = addedTask.Name;
-            textTaskDescription.Text = addedTask.Description;
-            datePickerStartDate.DisplayDate = addedTask.StartDate;
-            datePickerDueDate.DisplayDate = addedTask.DueDate;
-            // TODO: combobox responsible person
+            SelectTask(selectedTask);
         }
 
-        private void buttonApplyTask_Click(object sender, RoutedEventArgs e)
+        private void buttonTaskApply_Click(object sender, RoutedEventArgs e)
         {
             TaskModelLib.Task t = (TaskModelLib.Task)dataGridTasks.SelectedValue;
             if (t == null) return;
-
-            Debug.WriteLine(dataGridTasks.SelectedValue);
-
+                        
             t.Name = textTaskName.Text;
             t.Description = textTaskDescription.Text;
             t.StartDate = datePickerStartDate.DisplayDate;
             t.DueDate = datePickerDueDate.DisplayDate;
             // TODO: combobox responsible person
+            t.Status = (string)cbTaskStatus.SelectedItem;
 
             dataGridTasks.Items.Refresh();
         }
 
-        private void buttonDeleteTask_Click(object sender, RoutedEventArgs e)
+        private void SelectTask(TaskModelLib.Task task)
+        {
+            if (task == null)
+            {
+                textTaskName.Text = "";
+                textTaskDescription.Text = "";
+                datePickerStartDate.SelectedDate = null;
+                datePickerDueDate.SelectedDate = null;
+                cbTaskResponsiblePerson.SelectedItem = null;
+                cbTaskStatus.SelectedItem = null;
+
+                textTaskName.IsEnabled = false;
+                textTaskDescription.IsEnabled = false;
+                datePickerStartDate.IsEnabled = false;
+                datePickerDueDate.IsEnabled = false;
+                cbTaskResponsiblePerson.IsEnabled = false;
+                cbTaskStatus.IsEnabled = false;
+            } else
+            {
+                textTaskName.Text = task.Name;
+                textTaskDescription.Text = task.Description;
+                datePickerStartDate.SelectedDate = task.StartDate;
+                datePickerDueDate.SelectedDate = task.DueDate;
+
+                cbTaskResponsiblePerson.SelectedItem = task.ResponsiblePersonId.ToString();
+
+
+                //cbTaskStatus.SelectedItem = task.Status;
+                cbTaskStatus.SelectedValue = task.Status;
+
+                textTaskName.IsEnabled = true;
+                textTaskDescription.IsEnabled = true;
+                datePickerStartDate.IsEnabled = true;
+                datePickerDueDate.IsEnabled = true;
+                cbTaskResponsiblePerson.IsEnabled = true;
+                cbTaskStatus.IsEnabled = true;
+            }
+
+        }
+
+        private void buttonTaskDelete_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteTask(selectedTask);
+            SelectTask(null);
+        }
+
+        private void DeleteTask(TaskModelLib.Task task)
+        {
+            if (task == null) return;
+
+            MessageBoxResult mbResult = MessageBox.Show($"Are you sure to delete task named '{task.Name}'?", "Deleting Task", MessageBoxButton.YesNo);
+            if (mbResult == MessageBoxResult.Yes)
+            {
+                taskModel.taskTable.DeleteTask(task);
+                dataGridTasks.ItemsSource = null;
+                dataGridTasks.ItemsSource = taskModel.taskTable.data;
+            }
+        }
+
+        private void buttonTaskGridDelete_Click(object sender, RoutedEventArgs e)
         {
             TaskModelLib.Task task = null;
             for (var vis = sender as Visual; vis != null; vis = VisualTreeHelper.GetParent(vis) as Visual)
@@ -91,22 +150,9 @@ namespace TaskEditor
                     break;
                 }
             }
-            if (task == null) return;
-            
-            MessageBoxResult mbResult = MessageBox.Show($"Are you sure to delete task named '{task.Name}'?", "Deleting Task", MessageBoxButton.YesNo);
-            if (mbResult == MessageBoxResult.Yes)
-            {
-                taskModel.taskTable.DeleteTask(task);
-                dataGridTasks.ItemsSource = null;
-                dataGridTasks.ItemsSource = taskModel.taskTable.data;
-            }
-        }
 
-
-        private void buttonCancelAddTask_Click(object sender, RoutedEventArgs e)
-        {
-            taskModel.taskTable.DeleteTaskById(addedTask.Id);
-            dataGridTasks.Items.Refresh();
+            DeleteTask(task);
+            SelectTask(null);
         }
 
         private void SelectPerson(Person person)
@@ -160,7 +206,7 @@ namespace TaskEditor
             SelectPerson(null);
         }
 
-            private void buttonPersonGridDelete_Click(object sender, RoutedEventArgs e)
+        private void buttonPersonGridDelete_Click(object sender, RoutedEventArgs e)
         {
             Person person = null;
             for (var vis = sender as Visual; vis != null; vis = VisualTreeHelper.GetParent(vis) as Visual)
@@ -197,8 +243,8 @@ namespace TaskEditor
         private void dataGridTasks_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             DataGrid dg = sender as DataGrid;
-            Debug.WriteLine($"tasks selection changed {dg.SelectedValue}");
-            //
+            selectedTask = (TaskModelLib.Task)dg.SelectedItem;
+            SelectTask(selectedTask);
         }
 
         private void dataGridPersons_SelectionChanged(object sender, SelectionChangedEventArgs e)
