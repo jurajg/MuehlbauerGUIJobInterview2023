@@ -49,6 +49,7 @@ namespace TaskEditor
             dataGridTasks.ItemsSource = taskModel.taskTable.data;
             taskGrid.DataContext = this;
             personGrid.DataContext = this;
+            cbTaskResponsiblePerson.ItemsSource = taskModel.personTable.data;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -74,7 +75,7 @@ namespace TaskEditor
             t.StartDate = datePickerStartDate.DisplayDate;
             t.DueDate = datePickerDueDate.DisplayDate;
             // TODO: combobox responsible person
-            t.Status = Enum.GetName((TaskStatusEnum)cbTaskStatus.SelectedItem);
+            t.Status = Enum.GetName((TaskStatusEnum)(cbTaskStatus.SelectedItem ?? TaskStatusEnum.todo));
 
             dataGridTasks.Items.Refresh();
         }

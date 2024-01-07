@@ -63,11 +63,13 @@
                             <DatePicker Grid.Row="3" Grid.Column="1" x:Name="datePickerDueDate" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center"/>
 
                             <Label      Grid.Row="4" Grid.Column="0" x:Name="labelResponsiblePerson" Content="Responsible Person" HorizontalAlignment="Right" Margin="10,5,0,5" VerticalAlignment="Center"/>
-                            <ComboBox   Grid.Row="4" Grid.Column="1" x:Name="cbTaskResponsiblePerson" HorizontalAlignment="Left" Margin="10,5,0,5" VerticalAlignment="Center" Width="300"/>
+                            <ComboBox   Grid.Row="4" Grid.Column="1" x:Name="cbTaskResponsiblePerson" HorizontalAlignment="Left" Margin="10,5,0,5" VerticalAlignment="Center" Width="300"
+                                        ItemsSource="{Binding Source={StaticResource StatusEnum}, Mode=OneWay}"/>
 
                             <Label      Grid.Row="5" Grid.Column="0" x:Name="labelTaskStatus" Content="Status" HorizontalAlignment="Right" Margin="10,5,0,5" VerticalAlignment="Center"/>
                             <ComboBox   Grid.Row="5" Grid.Column="1" x:Name="cbTaskStatus"    HorizontalAlignment="Left" Margin="10,5,0,5" VerticalAlignment="Center" Width="300"
-                                        ItemsSource="{Binding Source={StaticResource StatusEnum}, Mode=OneWay}"/>
+                                        SelectedValuePath="Id"
+                                        />
 
                             <Button Grid.Row="6" Grid.Column="0" x:Name="buttonTaskApply"  Content="Apply" HorizontalAlignment="Center" Margin="0,10,0,10" Padding="5,5,5,5" VerticalAlignment="Top" Click="buttonTaskApply_Click"/>
                             <Button Grid.Row="6" Grid.Column="1" x:Name="buttonTaskDelete" Content="Delete" HorizontalAlignment="Left" Margin="10,10,0,10" Padding="5,5,5,5" VerticalAlignment="Top" Click="buttonTaskDelete_Click"/>
