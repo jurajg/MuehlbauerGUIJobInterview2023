@@ -74,7 +74,7 @@ namespace TaskEditor
             t.StartDate = datePickerStartDate.DisplayDate;
             t.DueDate = datePickerDueDate.DisplayDate;
             // TODO: combobox responsible person
-            t.Status = (string)cbTaskStatus.SelectedItem;
+            t.Status = Enum.GetName((TaskStatusEnum)cbTaskStatus.SelectedItem);
 
             dataGridTasks.Items.Refresh();
         }
@@ -105,9 +105,10 @@ namespace TaskEditor
 
                 cbTaskResponsiblePerson.SelectedItem = task.ResponsiblePersonId.ToString();
 
-
-                //cbTaskStatus.SelectedItem = task.Status;
-                cbTaskStatus.SelectedValue = task.Status;
+                TaskStatusEnum val = Enum.TryParse<TaskStatusEnum>(task.Status, true, out val) ? val : TaskStatusEnum.todo;
+                cbTaskStatus.SelectedItem = val;
+                //cbTaskStatus.SelectedValue = task.Status;
+                //cbTaskStatus.
 
                 textTaskName.IsEnabled = true;
                 textTaskDescription.IsEnabled = true;

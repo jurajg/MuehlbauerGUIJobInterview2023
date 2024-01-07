@@ -66,14 +66,15 @@
                             <ComboBox   Grid.Row="4" Grid.Column="1" x:Name="cbTaskResponsiblePerson" HorizontalAlignment="Left" Margin="10,5,0,5" VerticalAlignment="Center" Width="300"/>
 
                             <Label      Grid.Row="5" Grid.Column="0" x:Name="labelTaskStatus" Content="Status" HorizontalAlignment="Right" Margin="10,5,0,5" VerticalAlignment="Center"/>
-                            <ComboBox   Grid.Row="5" Grid.Column="1" x:Name="cbTaskStatus"    HorizontalAlignment="Left" Margin="10,5,0,5" VerticalAlignment="Center" Width="300"/>
+                            <ComboBox   Grid.Row="5" Grid.Column="1" x:Name="cbTaskStatus"    HorizontalAlignment="Left" Margin="10,5,0,5" VerticalAlignment="Center" Width="300"
+                                        ItemsSource="{Binding Source={StaticResource StatusEnum}, Mode=OneWay}"/>
 
                             <Button Grid.Row="6" Grid.Column="0" x:Name="buttonTaskApply"  Content="Apply" HorizontalAlignment="Center" Margin="0,10,0,10" Padding="5,5,5,5" VerticalAlignment="Top" Click="buttonTaskApply_Click"/>
                             <Button Grid.Row="6" Grid.Column="1" x:Name="buttonTaskDelete" Content="Delete" HorizontalAlignment="Left" Margin="10,10,0,10" Padding="5,5,5,5" VerticalAlignment="Top" Click="buttonTaskDelete_Click"/>
                         </Grid>
 
                         <Grid Background="#FFE5E5E5" Grid.Row="2">
-                            <DataGrid x:Name="dataGridTasks" AutoGenerateColumns="False" CanUserSortColumns="True" CanUserAddRows="False" SelectionChanged="dataGridTasks_SelectionChanged">
+                            <DataGrid x:Name="dataGridTasks" AutoGenerateColumns="False" CanUserSortColumns="True" CanUserAddRows="False" SelectionChanged="dataGridTasks_SelectionChanged" SelectionMode="Single" IsReadOnly="True">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" />
                                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
@@ -199,7 +200,7 @@
 
                         <Grid Background="#FFE5E5E5" Grid.Row="2">
                             <Grid Background="#FFE5E5E5">
-                        <DataGrid x:Name="dataGridPersons" AutoGenerateColumns="False" CanUserSortColumns="True" CanUserAddRows="False" SelectionChanged="dataGridPersons_SelectionChanged">
+                                <DataGrid x:Name="dataGridPersons" AutoGenerateColumns="False" CanUserSortColumns="True" CanUserAddRows="False" SelectionChanged="dataGridPersons_SelectionChanged" SelectionMode="Single" IsReadOnly="True">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" />
                                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
