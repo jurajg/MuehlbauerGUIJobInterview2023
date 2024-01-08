@@ -8,6 +8,7 @@ namespace TaskModelLib
 {
     public abstract class Table
     {
+        public TaskModel parentModel;
         public string TableName { get; }
         public Table(string sTableName)
         {

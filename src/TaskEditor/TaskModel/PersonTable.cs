@@ -38,6 +38,13 @@ namespace TaskModelLib
             return maxId + 1;
         }
 
+        public Person GetPersonById(long id)
+        {
+            List<Person> persons = data.Where(item => item.Id == id).ToList();
+            if (persons.Count > 0) return persons[0];
+            else return null;
+        }
+
         public void DeletePersonById(long id)
         {
             data.RemoveAll(item => item.Id == id);

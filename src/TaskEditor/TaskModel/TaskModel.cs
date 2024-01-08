@@ -15,6 +15,7 @@ namespace TaskModelLib
         {
             taskTable = new();
             personTable = new();
+            taskTable.parentModel = this;
         }
 
         public void Load()
@@ -28,6 +29,5 @@ namespace TaskModelLib
             taskTable.Save();
             personTable.Save();
         }
-
     }
 }

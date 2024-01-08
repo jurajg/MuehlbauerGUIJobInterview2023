@@ -60,6 +60,11 @@ namespace TaskModelLib
                 TaskModelLib.Task taskType = new();
                 List<ICSVRow> result = CSVStorage.ReadCSV(fPath, taskType);
                 data = new(result.Cast<TaskModelLib.Task>());
+
+                foreach(Task task in data)
+                {
+                    task.parentTable = this;
+                }
             }
         }
 

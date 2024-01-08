@@ -14,14 +14,31 @@ namespace TaskModelLib
         public string Description { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime DueDate { get; set; }
-        public string ResponsiblePerson { get; set; }
+        public string? ResponsiblePerson
+        {
+            get
+            {
+                Person person = parentTable?.parentModel?.personTable?.GetPersonById(ResponsiblePersonId);
+                if (person == null)
+                {
+                    return "";
+                } else
+                {
+                    return person.Name;
+                }
+                // TODO return person ?? person.Name : "";
+            }
+        }
         public long ResponsiblePersonId { get; set; }
         public string Status { get; set; }
+
+        public TaskTable parentTable;
 
         public Task()
         {
             StartDate = DateTime.Now;
             DueDate = StartDate.AddDays(1);
+            parentTable = null;
         }
 
         ICSVRow ICSVRow.Create(string[] columns)

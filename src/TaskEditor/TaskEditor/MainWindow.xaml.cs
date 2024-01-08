@@ -72,9 +72,12 @@ namespace TaskEditor
                         
             t.Name = textTaskName.Text;
             t.Description = textTaskDescription.Text;
-            t.StartDate = datePickerStartDate.DisplayDate;
-            t.DueDate = datePickerDueDate.DisplayDate;
-            // TODO: combobox responsible person
+            t.StartDate = (DateTime)(datePickerStartDate.SelectedDate ?? DateTime.Now);
+            t.DueDate   = (DateTime)(datePickerDueDate.SelectedDate ?? DateTime.Now);
+
+            Person selectedResponsiblePerson = (Person)cbTaskResponsiblePerson.SelectedItem;
+            t.ResponsiblePersonId = selectedResponsiblePerson!=null ? selectedResponsiblePerson.Id : 0;
+
             t.Status = Enum.GetName((TaskStatusEnum)(cbTaskStatus.SelectedItem ?? TaskStatusEnum.todo));
 
             dataGridTasks.Items.Refresh();
@@ -104,11 +107,12 @@ namespace TaskEditor
                 datePickerStartDate.SelectedDate = task.StartDate;
                 datePickerDueDate.SelectedDate = task.DueDate;
 
-                cbTaskResponsiblePerson.SelectedItem = task.ResponsiblePersonId.ToString();
+                cbTaskResponsiblePerson.SelectedItem = taskModel.personTable.GetPersonById(task.ResponsiblePersonId);
+                    //task.ResponsiblePersonId; //.ToString();
 
                 TaskStatusEnum eStatus = Enum.TryParse<TaskStatusEnum>(task.Status, true, out eStatus) ? eStatus : TaskStatusEnum.todo;
                 cbTaskStatus.SelectedItem = eStatus;
-
+                
                 textTaskName.IsEnabled = true;
                 textTaskDescription.IsEnabled = true;
                 datePickerStartDate.IsEnabled = true;
@@ -200,6 +204,7 @@ namespace TaskEditor
             p.Email = textPersonEmail.Text;
 
             dataGridPersons.Items.Refresh();
+            CollectionViewSource.GetDefaultView(dataGridTasks.ItemsSource).Refresh();
         }
 
         private void buttonPersonDelete_Click(object sender, RoutedEventArgs e)
