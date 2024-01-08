@@ -54,6 +54,8 @@ namespace TaskEditor
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            ApplyTaskChanges();
+            ApplyPersonChanges();
             taskModel.Save();
         }
 
@@ -67,16 +69,21 @@ namespace TaskEditor
 
         private void buttonTaskApply_Click(object sender, RoutedEventArgs e)
         {
+            ApplyTaskChanges();
+        }
+
+        private void ApplyTaskChanges()
+        {
             TaskModelLib.Task t = selectedTask;
             if (t == null) return;
-                        
+
             t.Name = textTaskName.Text;
             t.Description = textTaskDescription.Text;
             t.StartDate = (DateTime)(datePickerStartDate.SelectedDate ?? DateTime.Now);
-            t.DueDate   = (DateTime)(datePickerDueDate.SelectedDate ?? DateTime.Now);
+            t.DueDate = (DateTime)(datePickerDueDate.SelectedDate ?? DateTime.Now);
 
             Person selectedResponsiblePerson = (Person)cbTaskResponsiblePerson.SelectedItem;
-            t.ResponsiblePersonId = selectedResponsiblePerson!=null ? selectedResponsiblePerson.Id : 0;
+            t.ResponsiblePersonId = selectedResponsiblePerson != null ? selectedResponsiblePerson.Id : 0;
 
             t.Status = Enum.GetName((TaskStatusEnum)(cbTaskStatus.SelectedItem ?? TaskStatusEnum.todo));
 
@@ -195,6 +202,11 @@ namespace TaskEditor
 
         private void buttonPersonApply_Click(object sender, RoutedEventArgs e)
         {
+            ApplyPersonChanges();
+        }
+
+        private void ApplyPersonChanges()
+        {
             Person p = selectedPerson;
             if (p == null) return;
 
@@ -249,6 +261,7 @@ namespace TaskEditor
 
         private void dataGridTasks_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            ApplyTaskChanges();
             DataGrid dg = sender as DataGrid;
             selectedTask = (TaskModelLib.Task)dg.SelectedItem;
             SelectTask(selectedTask);
@@ -256,9 +269,11 @@ namespace TaskEditor
 
         private void dataGridPersons_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            ApplyPersonChanges();
             DataGrid dg = sender as DataGrid;
             selectedPerson = (Person)dg.SelectedItem;
             SelectPerson(selectedPerson);
         }
+       
     }
 }
