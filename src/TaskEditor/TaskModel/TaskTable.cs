@@ -5,12 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using CSVStorageLib;
+using System.Collections.ObjectModel;
 
 namespace TaskModelLib
 {
     public class TaskTable : Table
     {
-        public List<Task> data;
+        public ObservableCollection<Task> data;
 
         public TaskTable() : base("task")
         {
@@ -25,6 +26,7 @@ namespace TaskModelLib
         public Task CreateTask()
         {
             Task task = new();
+            task.parentTable = this;
             task.Id = CreateUniqueId();
             data.Add(task);
             return task;
@@ -45,7 +47,7 @@ namespace TaskModelLib
 
         public void DeleteTaskById(long id)
         {
-            data.RemoveAll(item => item.Id == id);
+            data.Remove(data.Where(item => item.Id == id).Single());
         }
 
         public override void Load()

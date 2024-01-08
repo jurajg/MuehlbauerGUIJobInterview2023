@@ -1,10 +1,12 @@
 ﻿using CSVStorageLib;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace TaskModelLib
 {
-    public class Task : ICSVRow
+    public class Task : ICSVRow, INotifyPropertyChanged
     {
         readonly string[] ColumnNames = { "Id", "Name", "Description", "StartDate", "DueDate", "ResponsiblePersonId", "Status" };
 
@@ -14,25 +16,39 @@ namespace TaskModelLib
         public string Description { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime DueDate { get; set; }
-        public string? ResponsiblePerson
+        public string ResponsiblePerson
         {
             get
             {
                 Person person = parentTable?.parentModel?.personTable?.GetPersonById(ResponsiblePersonId);
-                if (person == null)
-                {
-                    return "";
-                } else
-                {
-                    return person.Name;
-                }
-                // TODO return person ?? person.Name : "";
+                return person != null ? person.Name : "";
             }
         }
-        public long ResponsiblePersonId { get; set; }
+        private long _responsiblePersonId = 0;
+        public long ResponsiblePersonId
+        {
+            get
+            {
+                return _responsiblePersonId;
+            }
+            set
+            {
+                _responsiblePersonId = value;
+                NotifyPropertyChanged("ResponsiblePersonId");
+                NotifyPropertyChanged("ResponsiblePerson");
+            }
+        }
+        private void NotifyPropertyChanged(string name)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(name));
+        }
+
         public string Status { get; set; }
 
         public TaskTable parentTable;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public Task()
         {
@@ -76,5 +92,6 @@ namespace TaskModelLib
         {
             return ColumnNames;
         }
+
     }
 }

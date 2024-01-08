@@ -80,7 +80,8 @@ namespace TaskEditor
 
             t.Status = Enum.GetName((TaskStatusEnum)(cbTaskStatus.SelectedItem ?? TaskStatusEnum.todo));
 
-            dataGridTasks.Items.Refresh();
+            CollectionViewSource.GetDefaultView(dataGridTasks.ItemsSource).Refresh();
+            //dataGridTasks.Items.Refresh();
         }
 
         private void SelectTask(TaskModelLib.Task task)
@@ -108,7 +109,6 @@ namespace TaskEditor
                 datePickerDueDate.SelectedDate = task.DueDate;
 
                 cbTaskResponsiblePerson.SelectedItem = taskModel.personTable.GetPersonById(task.ResponsiblePersonId);
-                    //task.ResponsiblePersonId; //.ToString();
 
                 TaskStatusEnum eStatus = Enum.TryParse<TaskStatusEnum>(task.Status, true, out eStatus) ? eStatus : TaskStatusEnum.todo;
                 cbTaskStatus.SelectedItem = eStatus;
@@ -195,7 +195,6 @@ namespace TaskEditor
 
         private void buttonPersonApply_Click(object sender, RoutedEventArgs e)
         {
-            //Person p = (TaskModelLib.Person)dataGridPersons.SelectedValue;
             Person p = selectedPerson;
             if (p == null) return;
 
@@ -245,6 +244,7 @@ namespace TaskEditor
         private void buttonDeletePerson_Click(object sender, RoutedEventArgs e)
         {
             DeletePerson(selectedPerson);
+            SelectPerson(null);
         }
 
         private void dataGridTasks_SelectionChanged(object sender, SelectionChangedEventArgs e)

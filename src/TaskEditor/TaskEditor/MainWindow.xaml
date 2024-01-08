@@ -95,8 +95,10 @@
                                     <DataGridTextColumn  Header="DueDate"
                                                          Binding="{Binding Path=DueDate, StringFormat='dd.MM.yyyy',
                                                                        UpdateSourceTrigger=LostFocus}" />
-                                    
-                                    <DataGridTextColumn Header="ResponsiblePerson" Binding="{Binding ResponsiblePerson}" IsReadOnly="True" />
+
+                                    <DataGridTextColumn Header="ResponsiblePerson"
+                                                        Binding="{Binding ResponsiblePerson, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                        IsReadOnly="True"/>
 
                                     <DataGridTemplateColumn Header="Status" SortMemberPath="Status" CanUserSort="True">
                                         <DataGridTemplateColumn.CellTemplate>
